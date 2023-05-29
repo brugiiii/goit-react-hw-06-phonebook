@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import { object, string, number } from 'yup';
+
 // styles
 import {
   FormEl,
@@ -9,6 +9,11 @@ import {
   Button,
   ErrorMessageEl,
 } from './ContactForm.styled';
+
+// redux
+import { addContact } from 'redux/contactsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts } from 'redux/selectors';
 
 const schema = object({
   name: string().required(),
@@ -20,9 +25,17 @@ const initialValues = {
   number: '',
 };
 
-export const ContactForm = ({ onSubmit }) => {
+export const ContactForm = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
+
   const onFormSubmit = (values, { resetForm }) => {
-    onSubmit(values);
+    const loweredName = values.name.toLowerCase();
+
+    contacts.find(contact => contact.name.toLowerCase() === loweredName)
+      ? alert(`${values.name} is already in contacts`)
+      : dispatch(addContact(values));
+
     resetForm();
   };
 
@@ -59,8 +72,4 @@ export const ContactForm = ({ onSubmit }) => {
       </FormEl>
     </Formik>
   );
-};
-
-ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
 };

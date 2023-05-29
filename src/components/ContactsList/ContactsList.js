@@ -1,26 +1,27 @@
-import PropTypes from 'prop-types';
 import { ContactsListEl, ListItem, Button } from './ContactsList.styled';
+import { useSelector, useDispatch } from 'react-redux';
+import { getContacts, getFilter } from 'redux/selectors';
+import { deleteContact } from 'redux/contactsSlice';
 
-export const ContactsList = ({ contacts, onClick }) => {
+export const ContactsList = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
+
+  const filter = useSelector(getFilter);
+  const loweredFilter = filter.toLocaleLowerCase();
+
+  const filteredContacts = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(loweredFilter)
+  );
+
   return (
     <ContactsListEl>
-      {contacts.map(({ name, id, number }) => (
+      {filteredContacts.map(({ name, id, number }) => (
         <ListItem key={id}>
           {name}: {number}
-          <Button onClick={() => onClick(id)}>Delete</Button>
+          <Button onClick={() => dispatch(deleteContact(id))}>Delete</Button>
         </ListItem>
       ))}
     </ContactsListEl>
   );
-};
-
-ContactsList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ),
-  onClick: PropTypes.func.isRequired,
 };
