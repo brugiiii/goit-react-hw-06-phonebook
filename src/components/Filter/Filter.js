@@ -7,9 +7,7 @@ export const Filter = () => {
   const filter = useSelector(getFilter);
   const dispatch = useDispatch();
 
-  const handleChange = e => {
-    dispatch(changeFilter(e.target.value));
-  };
+  const handleChange = e => dispatch(changeFilter(e.target.value));
 
   return (
     <Label>
