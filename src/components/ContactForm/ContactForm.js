@@ -34,9 +34,7 @@ export const ContactForm = () => {
 
     contacts.find(contact => contact.name.toLowerCase() === loweredName)
       ? alert(`${values.name} is already in contacts`)
-      : dispatch(addContact(values));
-
-    resetForm();
+      : dispatch(addContact(values)) && resetForm();
   };
 
   return (
